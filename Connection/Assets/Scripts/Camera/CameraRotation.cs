@@ -10,8 +10,6 @@ public class CameraRotation : MonoBehaviour
 
     public Transform orientation;
 
-    public GameObject crosshair;
-
     float xRotation;
     float yRotation;
 

@@ -17,14 +17,23 @@ public class GameControler : MonoBehaviour
     
     public GameObject GameMenu;
     public GameObject Character;
-    public GameObject Camera;
+    public Camera Camera;
 
     [Header("Planes")]
 
     public GameObject[] planes;
     public int planeIndex;
 
+    [Header("Interactable")]
+
+    public GameObject crosshair;
+    public GameObject[] crosshairStates;
+    public int crosshairIndex;
+
+    public float detectDistance;
+
     private bool locked;
+    private RaycastHit hit;
 
     // Start is called before the first frame update
     void Start()
@@ -36,20 +45,17 @@ public class GameControler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if(!locked){
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
-        }
-        else{
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-
+        DetectInteractibility();
+        Lockout();
         PlayerInput();
     }
 
     private void FixedUpdate(){
+        ShiftPlanes();
+        ShiftCrosshair();
+    }
+
+    private void ShiftPlanes(){
         for(int i = 0; i < planes.Length; i++){
             if(i == planeIndex){
                 planes[i].SetActive(true);
@@ -57,6 +63,46 @@ public class GameControler : MonoBehaviour
             else{
                 planes[i].SetActive(false);
             }
+        }
+    }
+
+    private void ShiftCrosshair(){
+        for(int i = 0; i < crosshairStates.Length; i++){
+            if(i == crosshairIndex){
+                crosshairStates[i].SetActive(true);
+            }
+            else{
+                crosshairStates[i].SetActive(false);
+            }
+        }
+    }
+
+    private void DetectInteractibility(){
+        Physics.Raycast( Camera.main.ScreenPointToRay( Input.mousePosition ), out hit, detectDistance );
+        if(hit.collider != null){
+            if(hit.collider.CompareTag("Interactable")) {
+                crosshairIndex = 1;
+            }
+            else{
+                crosshairIndex = 0;
+            }
+        }
+        else{
+            crosshairIndex = 0;
+        } 
+        
+    }
+
+    private void Lockout(){
+        if(!locked){
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
+            crosshair.SetActive(false);
+        }
+        else{
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            crosshair.SetActive(true);
         }
     }
 
