@@ -54,6 +54,7 @@ public class CharacterMovement : MonoBehaviour
     }
 
     private void FixedUpdate() {
+        if(!locked)
         CharacterMove();
     }
 

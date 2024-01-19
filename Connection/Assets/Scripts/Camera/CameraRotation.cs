@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraControls : MonoBehaviour
+public class CameraRotation : MonoBehaviour
 {
     public float sensX;
     public float sensY;
@@ -24,17 +24,7 @@ public class CameraControls : MonoBehaviour
 
     public void Update(){
         
-        if(!locked){
-            crosshair.SetActive(false);
-            Cursor.lockState = CursorLockMode.Confined;
-            Cursor.visible = true;
-        }
-        else{
-            crosshair.SetActive(true);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-
+        
         if(locked){
             float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime *sensX;
             float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime *sensY;
