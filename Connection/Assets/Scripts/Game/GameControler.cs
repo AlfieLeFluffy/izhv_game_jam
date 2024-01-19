@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -13,15 +14,21 @@ public class GameControler : MonoBehaviour
     public KeyCode menuKey = KeyCode.Escape;
     public KeyCode planeshiftKey = KeyCode.Q;
 
+    public bool allowedControls = true;
+
     [Header("BaseGameObjects")]
     
     public GameObject GameMenu;
     public GameObject Character;
     public Camera Camera;
+    public GameObject DirectionalLighting;
 
     [Header("Planes")]
 
     public GameObject[] planes;
+    public float[] angles;
+    public float[] intensities;
+    public Color[] ambientColors;
     public int planeIndex;
 
     [Header("Interactable")]
@@ -59,6 +66,9 @@ public class GameControler : MonoBehaviour
         for(int i = 0; i < planes.Length; i++){
             if(i == planeIndex){
                 planes[i].SetActive(true);
+                DirectionalLighting.transform.eulerAngles = new Vector3(angles[i], DirectionalLighting.transform.eulerAngles.y, DirectionalLighting.transform.eulerAngles.z);
+                DirectionalLighting.GetComponent<Light>().intensity = intensities[i];
+                DirectionalLighting.GetComponent<Light>().color = ambientColors[i];
             }
             else{
                 planes[i].SetActive(false);
@@ -107,13 +117,13 @@ public class GameControler : MonoBehaviour
     }
 
     private void PlayerInput(){
-        if(Input.GetKeyDown(menuKey)){
+        if(Input.GetKeyDown(menuKey) && allowedControls){
             ToggleLocked();
             GameMenu.SetActive(!GameMenu.activeInHierarchy);
             Character.GetComponent<CharacterMovement>().ToggleLockMovement();
             Camera.GetComponent<CameraRotation>().ToggleLook();
         } 
-        if(Input.GetKeyDown(planeshiftKey)){
+        if(Input.GetKeyDown(planeshiftKey) && allowedControls){
             if(planes.Length == planeIndex + 1 ) {
                 planeIndex = 0;
             }
@@ -125,5 +135,9 @@ public class GameControler : MonoBehaviour
 
     public void ToggleLocked(){
         locked = !locked;
+    }
+    
+    public void ToggleAllowedControls(){
+        allowedControls = !allowedControls;
     }
 }
