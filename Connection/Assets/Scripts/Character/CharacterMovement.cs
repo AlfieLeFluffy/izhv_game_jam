@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Yarn.Unity;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -92,7 +93,8 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    private void Jump()
+    [YarnCommand("leap")]
+    public void Jump()
     {
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
