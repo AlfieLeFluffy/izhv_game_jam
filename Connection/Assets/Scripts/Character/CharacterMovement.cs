@@ -31,6 +31,8 @@ public class CharacterMovement : MonoBehaviour
     Vector3 moveDirection;
     Rigidbody rb;
 
+    bool locked;
+
     private void Start(){
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
@@ -54,14 +56,21 @@ public class CharacterMovement : MonoBehaviour
         CharacterMove();
     }
 
-    private void PlayerInput(){
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+    public void ToggleLockMovement(){
+        locked = !locked;
+    }
 
-        if(Input.GetKey(jumpKey) && jumpCheck && grounded){
-            jumpCheck = false;
-            Jump();
-            Invoke(nameof(ResetJump), jumpCooldown);
+
+    private void PlayerInput(){
+        if(!locked){
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            verticalInput = Input.GetAxisRaw("Vertical");
+
+            if(Input.GetKey(jumpKey) && jumpCheck && grounded){
+                jumpCheck = false;
+                Jump();
+                Invoke(nameof(ResetJump), jumpCooldown);
+            }   
         }
     }
 
