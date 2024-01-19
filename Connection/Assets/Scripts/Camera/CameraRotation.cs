@@ -10,23 +10,27 @@ public class CameraControls : MonoBehaviour
 
     public Transform orientation;
 
+    public GameObject crosshair;
+
     float xRotation;
     float yRotation;
 
     bool locked;
 
     public void Start(){
-        locked = false;
+        locked = true;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Update(){
         
         if(!locked){
+            crosshair.SetActive(false);
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
         }
         else{
+            crosshair.SetActive(true);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
