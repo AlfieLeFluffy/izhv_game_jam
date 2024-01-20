@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,22 +19,25 @@ public class GameControler : MonoBehaviour
 
     [Header("BaseGameObjects")]
     
-    public GameObject GameMenu;
-    public GameObject Character;
-    public Camera Camera;
-    public GameObject DirectionalLighting;
+    public GameObject gameMenu;
+    public GameObject character;
+    public Camera mainCamera;
+    public GameObject overworldLight;
 
     [Header("Planes")]
 
     public GameObject[] planes;
+    public TMP_Text[] linesUI;
+    public string[] displayTimes;
     public float[] angles;
     public float[] intensities;
     public Color[] ambientColors;
     public int planeIndex;
+    public GameObject planeshiftEffect;
 
     [Header("Interactable")]
 
-    public GameObject crosshair;
+    public GameObject gameUI;
     public GameObject[] crosshairStates;
     public int crosshairIndex;
 
@@ -46,7 +50,8 @@ public class GameControler : MonoBehaviour
     void Start()
     {
         locked = true;
-        GameMenu.SetActive(false);    
+        gameMenu.SetActive(false);    
+        gameUI.SetActive(true);
     }
 
     // Update is called once per frame
@@ -60,15 +65,26 @@ public class GameControler : MonoBehaviour
     private void FixedUpdate(){
         ShiftPlanes();
         ShiftCrosshair();
+        if(planeshiftEffect.GetComponent<Image>().color.a>0){
+            planeshiftEffect.SetActive(true);
+            var tempColour = planeshiftEffect.GetComponent<Image>().color;
+            tempColour.a = tempColour.a - 0.1f;
+            planeshiftEffect.GetComponent<Image>().color = tempColour;
+        }
+        else{
+            planeshiftEffect.SetActive(false);
+        }
     }
 
     private void ShiftPlanes(){
         for(int i = 0; i < planes.Length; i++){
             if(i == planeIndex){
                 planes[i].SetActive(true);
-                DirectionalLighting.transform.eulerAngles = new Vector3(angles[i], DirectionalLighting.transform.eulerAngles.y, DirectionalLighting.transform.eulerAngles.z);
-                DirectionalLighting.GetComponent<Light>().intensity = intensities[i];
-                DirectionalLighting.GetComponent<Light>().color = ambientColors[i];
+                overworldLight.transform.eulerAngles = new Vector3(angles[i], overworldLight.transform.eulerAngles.y, overworldLight.transform.eulerAngles.z);
+                linesUI[0].text = "//DIMENSION: "+planes[i].name;
+                linesUI[1].text = "///TIME: "+displayTimes[i];
+                overworldLight.GetComponent<Light>().intensity = intensities[i];
+                overworldLight.GetComponent<Light>().color = ambientColors[i];
             }
             else{
                 planes[i].SetActive(false);
@@ -88,7 +104,7 @@ public class GameControler : MonoBehaviour
     }
 
     private void DetectInteractibility(){
-        Physics.Raycast( Camera.main.ScreenPointToRay( Input.mousePosition ), out hit, detectDistance );
+        Physics.Raycast( mainCamera.ScreenPointToRay( Input.mousePosition ), out hit, detectDistance );
         if(hit.collider != null){
             if(hit.collider.CompareTag("Interactable")) {
                 crosshairIndex = 1;
@@ -107,23 +123,26 @@ public class GameControler : MonoBehaviour
         if(!locked){
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
-            crosshair.SetActive(false);
+            //gameUI.SetActive(false);
         }
         else{
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            crosshair.SetActive(true);
+            //gameUI.SetActive(true);
         }
     }
 
     private void PlayerInput(){
         if(Input.GetKeyDown(menuKey) && allowedControls){
             ToggleLocked();
-            GameMenu.SetActive(!GameMenu.activeInHierarchy);
-            Character.GetComponent<CharacterMovement>().ToggleLockMovement();
-            Camera.GetComponent<CameraRotation>().ToggleLook();
+            gameMenu.SetActive(!gameMenu.activeInHierarchy);
+            character.GetComponent<CharacterMovement>().ToggleLockMovement();
+            mainCamera.GetComponent<CameraRotation>().ToggleLook();
         } 
         if(Input.GetKeyDown(planeshiftKey) && allowedControls){
+            var tempColour = planeshiftEffect.GetComponent<Image>().color;
+            tempColour.a = 1f;;
+            planeshiftEffect.GetComponent<Image>().color = tempColour;
             if(planes.Length == planeIndex + 1 ) {
                 planeIndex = 0;
             }
