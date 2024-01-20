@@ -8,7 +8,7 @@ public class YarnInteractable : MonoBehaviour {
     // internal properties exposed to editor
     [SerializeField] private string conversationStartNode;
 
-    public GameObject Character;
+    private GameObject Character;
     public float interactDistance;
 
     // internal properties not exposed to editor
@@ -28,6 +28,7 @@ public class YarnInteractable : MonoBehaviour {
             defaultIndicatorIntensity = lightIndicatorObject.intensity;
             lightIndicatorObject.intensity = 0;
         }
+        Character = GameObject.FindGameObjectsWithTag("Player")[0];
     }
 
     public void OnMouseDown() {
