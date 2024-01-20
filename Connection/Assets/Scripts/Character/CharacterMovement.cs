@@ -29,6 +29,10 @@ public class CharacterMovement : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
+    [Header("Audio")]
+
+    public AudioClip[] audioClips;
+
     Vector3 moveDirection;
     Rigidbody rb;
 
@@ -54,8 +58,10 @@ public class CharacterMovement : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        if(!locked)
-        CharacterMove();
+        if(!locked) CharacterMove();
+
+        if((rb.velocity.x < 1 && rb.velocity.z < 1) || !grounded)   SoundManager.Instance.stopMovSound();
+    
     }
 
     public void ToggleLockMovement(){
@@ -68,7 +74,15 @@ public class CharacterMovement : MonoBehaviour
             horizontalInput = Input.GetAxisRaw("Horizontal");
             verticalInput = Input.GetAxisRaw("Vertical");
 
+            if((horizontalInput > 0.1 || verticalInput>0.1) && grounded){
+                if(!SoundManager.Instance.isPlayingMov()){
+                    SoundManager.Instance.playMovSound(audioClips[1]);
+                }
+            }
+
             if(Input.GetKey(jumpKey) && jumpCheck && grounded){
+
+                
                 jumpCheck = false;
                 Jump();
                 Invoke(nameof(ResetJump), jumpCooldown);
@@ -83,6 +97,9 @@ public class CharacterMovement : MonoBehaviour
             rb.AddForce(moveDirection.normalized * movementSpeed * 10f, ForceMode.Force);
 
         else if(!grounded)
+
+            SoundManager.Instance.stopMovSound();
+
             rb.AddForce(moveDirection.normalized * movementSpeed * 10f * airMultiplier, ForceMode.Force);
     }
 
@@ -97,8 +114,8 @@ public class CharacterMovement : MonoBehaviour
     [YarnCommand("leap")]
     public void Jump()
     {
+        SoundManager.Instance.playCharSound(audioClips[0]);
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
     private void ResetJump()
