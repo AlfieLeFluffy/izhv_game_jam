@@ -96,7 +96,7 @@ public class CursorScript : MonoBehaviour
         }
         else
         {
-            //open preview
+            controller.SwitchPreviewActive();
         }
     }
 }

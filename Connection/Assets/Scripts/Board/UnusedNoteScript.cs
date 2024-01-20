@@ -2,13 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class UnusedNoteScript : MonoBehaviour
+public class UnusedNoteScript : MonoBehaviour, IPointerClickHandler
 {
     public ConnectionController controller;
     public int index;
 
     private Vector3 moveStart;
+
+
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            controller.SwitchPreviewActive();
+        }
+    }
 
 
     public void GrabNote()

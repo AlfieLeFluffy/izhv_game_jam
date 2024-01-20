@@ -15,6 +15,7 @@ public class ConnectionController : MonoBehaviour
     public Transform lines;
     public Transform postedNotes;
     public Transform unusedNotes;
+    public GameObject notePreview;
 
     public GameObject cam;
     public RectTransform canvas;
@@ -75,10 +76,7 @@ public class ConnectionController : MonoBehaviour
 
     public void PutAside(GameObject note)
     {
-        newObject = Instantiate(unusedNotePrefab, unusedNotes);
-        newObject.GetComponent<RectTransform>().localPosition = new Vector3(unusedNotes.childCount * 60 - 10, 0, 0);
-        newObject.GetComponent<UnusedNoteScript>().controller = this.GetComponent<ConnectionController>();
-        newObject.GetComponent<UnusedNoteScript>().index = unusedNotes.childCount;
+        AddNewNote();
 
         LineController line;
 
@@ -92,6 +90,11 @@ public class ConnectionController : MonoBehaviour
         }
 
         Destroy(note);
+    }
+
+    public void SwitchPreviewActive()
+    {
+        notePreview.SetActive(!notePreview.activeSelf);
     }
 
     public void SwitchConnectVar()
