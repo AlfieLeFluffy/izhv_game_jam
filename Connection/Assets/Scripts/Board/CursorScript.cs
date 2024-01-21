@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Yarn;
 
 public class CursorScript : MonoBehaviour
 {
     public ConnectionController controller;
-    public GameObject cam;
+    public Camera cam;
     public RectTransform canvas;
     public Transform lines;
 
@@ -14,26 +16,53 @@ public class CursorScript : MonoBehaviour
     private Vector3 start;
     private LineRenderer l;
 
+    public bool dragLock;
+
 
     private void Start()
     {
-        col = null;
+        col = this.gameObject;
+        dragLock = false;
     }
 
     void Update()
     {
-        if (col != null)
+        this.transform.position = controller.sideToBoard(Input.mousePosition);
+
+        if ((cam.orthographicSize > 40
+            && Input.mouseScrollDelta.y > 0)
+            || (cam.orthographicSize < 100
+            && Input.mouseScrollDelta.y < 0)) 
         {
-            if (Input.GetMouseButtonDown(0))
+            cam.orthographicSize -= Input.mouseScrollDelta.y * 3;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            start = this.transform.position;
+
+            if (!col.Equals(this.gameObject))
             {
-                start = this.transform.position;
+                dragLock = true;
+            }
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            if (!dragLock)
+            {
+                cam.gameObject.transform.position -= (this.transform.position - start) / 1.5f;
+            }
+            else if (!col.TryGetComponent<LineRenderer>(out l))
+            {
+                col.transform.position += this.transform.position - start;
             }
 
-            if (Input.GetMouseButton(0))
-            {
-                PostedNoteMove(col.transform);
-            }
+            start = this.transform.position;
+        }
 
+        if (!col.Equals(this.gameObject))
+        {
             if (Input.GetMouseButtonUp(0))
             {
                 if (col.TryGetComponent<LineRenderer>(out l))
@@ -45,12 +74,13 @@ public class CursorScript : MonoBehaviour
                     PostedNoteDrop(col.transform);
                 }
             }
-
+            
             if (Input.GetMouseButtonUp(1))
             {
-                if (col.TryGetComponent<LineRenderer>(out l))
+                if (col.TryGetComponent<LineRenderer>(out l)
+                    && controller.connect)
                 {
-                    DeleteConnection(col.transform);
+                    Destroy(col.transform.gameObject);
                 }
                 else
                 {
@@ -58,41 +88,34 @@ public class CursorScript : MonoBehaviour
                 }
             }
         }
-
-        this.transform.position = controller.sideToBoard(Input.mousePosition);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        col = collision.gameObject;
+        if (!dragLock)
+        {
+            col = collision.gameObject;
+        }
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        if (col == collision.gameObject)
+        if (col.Equals(collision.gameObject))
         {
-            col = null;
+            ClearCol();
         }
+    }
+
+    public void ClearCol()
+    {
+        col = this.gameObject;
+        dragLock = false;
     }
 
 
     private void ChangeConnectionText(Transform line)
     {
         print("yay");
-    }
-
-    private void DeleteConnection(Transform line)
-    {
-        if (controller.connect)
-        { 
-            Destroy(line.gameObject);
-        }
-    }
-
-    public void PostedNoteMove(Transform note)
-    {
-        note.position += (this.transform.position - start);
-        start = this.transform.position;
     }
 
     public void PostedNoteDrop(Transform note)
