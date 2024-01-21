@@ -24,7 +24,7 @@ public class ConnectionController : MonoBehaviour
 
     public GameObject cam;
     public RectTransform canvas;
-    public Transform cursor;
+    public CursorScript cursor;
 
     private GameObject newObject;
     public bool connect;
@@ -38,6 +38,11 @@ public class ConnectionController : MonoBehaviour
         connect = false;
     }
 
+
+    public void CamLock(bool value)
+    {
+        cursor.dragLock = value;
+    }
 
     public Vector3 sideToBoard(Vector3 side)
     {
@@ -73,7 +78,7 @@ public class ConnectionController : MonoBehaviour
     {
         newObject = Instantiate(postedNotePrefab, postedNotes);
         newObject.GetComponent<Transform>().position = sideToBoard(note.transform.position);
-        //newObject.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = note.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color;
+        //newObject.transform.GetChild(0).GetComponent<Material>().color = note.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color;
         newObject.GetComponentInChildren<TextMeshPro>().text = note.GetComponentInChildren<TextMeshProUGUI>().text;
 
         RectTransform child;
@@ -105,6 +110,7 @@ public class ConnectionController : MonoBehaviour
             }
         }
 
+        cursor.ClearCol();
         Destroy(note);
     }
 

@@ -25,6 +25,7 @@ public class UnusedNoteScript : MonoBehaviour, IPointerClickHandler
     public void BeginDragNote()
     {
         moveStart = Input.mousePosition;
+        controller.CamLock(true);
     }
 
     public void DragNote()
@@ -35,6 +36,8 @@ public class UnusedNoteScript : MonoBehaviour, IPointerClickHandler
 
     public void EndDragNote()
     {
+        controller.CamLock(false);
+
         if (Input.mousePosition.y > 70)
         {
             controller.PostNote(this.gameObject);
