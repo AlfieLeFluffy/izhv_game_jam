@@ -40,8 +40,10 @@ public class YarnInteractable : MonoBehaviour {
     }
 
     private void StartConversation() {
-        Character = GameObject.FindGameObjectsWithTag("Player")[0];
-        body.GetComponent<ObjectRotate>().RotateTo(Character);
+        if(!body.Equals(null)){
+            Character = GameObject.FindGameObjectsWithTag("Player")[0];
+            body.GetComponent<ObjectRotate>().RotateTo(Character);
+        }
         isCurrentConversation = true;
         // if (lightIndicatorObject != null) {
         //     lightIndicatorObject.intensity = defaultIndicatorIntensity;
