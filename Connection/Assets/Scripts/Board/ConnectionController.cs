@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Yarn.Unity;
 
 public class ConnectionController : MonoBehaviour
 {
@@ -51,6 +52,7 @@ public class ConnectionController : MonoBehaviour
         line.pointB = end;
     }
 
+    [YarnCommand("AddNoteToSide")]
     public void AddNoteToSide(int noteNumber)
     {
         newObject = Instantiate(unusedNotePrefab, unusedNotes);
@@ -65,7 +67,7 @@ public class ConnectionController : MonoBehaviour
 
     public void PutAside(GameObject note)
     {
-        AddNoteToSide(note.GetComponent<UnusedNoteScript>().noteNumber);
+        AddNoteToSide(note.GetComponent<PostedNoteScript>().noteNumber);
 
         LineController line;
 
@@ -103,11 +105,11 @@ public class ConnectionController : MonoBehaviour
         Destroy(note);
     }
 
-    public void OpenPreview(string text, Color color)
+    public void OpenPreview(int noteNumber)
     {
         notePreview.SetActive(!notePreview.activeSelf);
-        notePreview.GetComponentInChildren<TextMeshProUGUI>().text = text;
-        notePreview.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>().color = color;
+        notePreview.GetComponentInChildren<TextMeshProUGUI>().text = noteTable.titles[noteNumber];
+        notePreview.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>().color = noteTable.colors[noteNumber];
     }
 
     public void ClosePreview()

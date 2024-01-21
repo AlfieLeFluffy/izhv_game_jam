@@ -18,7 +18,7 @@ public class UnusedNoteScript : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
-            controller.OpenPreview(this.GetComponentInChildren<TextMeshProUGUI>().text, this.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color);
+            controller.OpenPreview(this.GetComponent<UnusedNoteScript>().noteNumber);
         }
     }
 

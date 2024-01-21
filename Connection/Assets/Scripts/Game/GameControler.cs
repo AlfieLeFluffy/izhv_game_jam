@@ -194,6 +194,7 @@ public class GameControler : MonoBehaviour
 
         if(Input.GetKeyDown(boardKey) && allowedControls){
             if(!isOpen){
+                
                 TogglePlaneshifting();
                 ToggleLocked();
                 isOpen =true;

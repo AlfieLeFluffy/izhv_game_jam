@@ -214,7 +214,7 @@ public class CursorScript : MonoBehaviour
         }
         else
         {
-            controller.OpenPreview(note.GetComponentInChildren<TextMeshPro>().text, Color.gray);
+            controller.OpenPreview(note.GetComponent<PostedNoteScript>().noteNumber);
         }
     }
 }

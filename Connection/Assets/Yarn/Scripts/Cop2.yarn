@@ -1,0 +1,18 @@
+﻿title: Cop2Start
+tags:
+---
+<<declare $WasBehindDoor = false>>
+<<if $WasBehindDoor == true>>
+    <<jump Cop2End>>
+<<endif>>
+Cop Balthazar: Hello, detective.
+Cop Balthazar: We are trying to open up this door, but we seem to be unable to.
+Cop Balthazar: If only there was a way around.
+-> I will see what I can do.
+===
+
+title: Cop2End
+tags:
+---
+Cop Balthazar: Oh, you found a way. Good job, even tho I have no idea how you managed that.
+===

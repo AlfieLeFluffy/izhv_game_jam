@@ -1,0 +1,17 @@
+﻿title: Cop1Start
+tags:
+---
+Cop Anton: Oh, it's you detective.
+Cop Anton: I thought I was halucinating. I could swear you were there a moment ago.
+-> I was in another dimension.
+    Cop Anton: And I was in a circus just now.
+-> Yeah, probably you should stop drinking so much.
+    Cop Anton: I am trying to turn it down, sir.
+Cop Anton: Anyways sir, the victim is a guy called Pavel.
+Cop Anton: His girlfriend found his body.
+Cop Anton: Here have this note.
+<<AddNoteToSide ConnectionController 0>>
+Cop Anton: *hands you a note*
+Cop Anton: If you want to check out your notes and their connections I think you can use TAB.
+-> Thanks.
+===

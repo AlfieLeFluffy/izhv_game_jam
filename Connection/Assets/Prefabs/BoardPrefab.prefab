@@ -1640,7 +1640,7 @@ GameObject:
   - component: {fileID: 1570653396217779591}
   - component: {fileID: 4072705501240703220}
   m_Layer: 0
-  m_Name: Connection Controller
+  m_Name: ConnectionController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1676,6 +1676,7 @@ MonoBehaviour:
   linePrefab: {fileID: 5835607990601102342, guid: fcc0175e44c55be4992855fc1f18f717, type: 3}
   postedNotePrefab: {fileID: 8005920663276685508, guid: ddab09167e2f636449f543c2b9e995d9, type: 3}
   unusedNotePrefab: {fileID: 761642588750515379, guid: 61caa0c10ce7c6e4eaa9ee964bc45619, type: 3}
+  noteTable: {fileID: 0}
   lines: {fileID: 6793095660682949733}
   postedNotes: {fileID: 6913862643075974579}
   unusedNotes: {fileID: 442079746190685789}
