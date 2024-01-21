@@ -9,7 +9,8 @@ public class YarnInteractable : MonoBehaviour {
     [SerializeField] private string conversationStartNode;
 
     private GameObject Character;
-    public float interactDistance;
+    public float interactDistance = 2.5f;
+    public GameObject body;
 
     // internal properties not exposed to editor
     private DialogueRunner dialogueRunner;
@@ -39,7 +40,8 @@ public class YarnInteractable : MonoBehaviour {
     }
 
     private void StartConversation() {
-        Debug.Log($"Started conversation with {name}.");
+        Character = GameObject.FindGameObjectsWithTag("Player")[0];
+        body.GetComponent<ObjectRotate>().RotateTo(Character);
         isCurrentConversation = true;
         // if (lightIndicatorObject != null) {
         //     lightIndicatorObject.intensity = defaultIndicatorIntensity;
@@ -53,7 +55,6 @@ public class YarnInteractable : MonoBehaviour {
             //     lightIndicatorObject.intensity = 0;
             // }
             isCurrentConversation = false;
-            Debug.Log($"Started conversation with {name}.");
         }
     }
 

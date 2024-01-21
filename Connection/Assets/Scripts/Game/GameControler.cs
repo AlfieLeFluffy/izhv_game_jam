@@ -28,20 +28,32 @@ public class GameControler : MonoBehaviour
 
     public GameObject[] planes;
     public TMP_Text[] linesUI;
+    public Material[] skyboxes;
+    
+    public Color[] UIcolours;
     public string[] displayTimes;
     public float[] angles;
     public float[] intensities;
     public Color[] ambientColors;
     public int planeIndex;
+
+    [Header("Planes Shifting")]
     public GameObject planeshiftEffect;
+    public GameObject cooldownDot;
+    public float cooldownTime = 2f;
+    private float cooldownTimer = 0f;
+    private bool offCooldown = true;
 
     [Header("Interactable")]
 
     public GameObject gameUI;
     public GameObject[] crosshairStates;
     public int crosshairIndex;
-
     public float detectDistance;
+
+    [Header("Audio")]
+    
+    public AudioClip[] audioClips;
 
     private bool locked;
     private RaycastHit hit;
@@ -65,6 +77,7 @@ public class GameControler : MonoBehaviour
     private void FixedUpdate(){
         ShiftPlanes();
         ShiftCrosshair();
+
         if(planeshiftEffect.GetComponent<Image>().color.a>0){
             planeshiftEffect.SetActive(true);
             var tempColour = planeshiftEffect.GetComponent<Image>().color;
@@ -74,6 +87,18 @@ public class GameControler : MonoBehaviour
         else{
             planeshiftEffect.SetActive(false);
         }
+
+        if(cooldownTimer>0){
+            cooldownTimer -= Time.deltaTime;
+            Vector3 angles = cooldownDot.GetComponent<RectTransform>().eulerAngles; 
+            angles.z = cooldownTimer/cooldownTime*360;
+            cooldownDot.GetComponent<RectTransform>().eulerAngles = angles;
+        }
+        else{
+            offCooldown = true;
+            cooldownDot.SetActive(false);
+        }
+
     }
 
     private void ShiftPlanes(){
@@ -81,10 +106,17 @@ public class GameControler : MonoBehaviour
             if(i == planeIndex){
                 planes[i].SetActive(true);
                 overworldLight.transform.eulerAngles = new Vector3(angles[i], overworldLight.transform.eulerAngles.y, overworldLight.transform.eulerAngles.z);
+
                 linesUI[0].text = "//DIMENSION: "+planes[i].name;
-                linesUI[1].text = "///TIME: "+displayTimes[i];
+                linesUI[0].color = UIcolours[i];
+                linesUI[1].text = "//TIME: "+displayTimes[i];
+                linesUI[1].color = UIcolours[i];
+                crosshairStates[crosshairIndex].GetComponent<Image>().color = UIcolours[i];
+                cooldownDot.GetComponent<Image>().color = UIcolours[i];
+
                 overworldLight.GetComponent<Light>().intensity = intensities[i];
                 overworldLight.GetComponent<Light>().color = ambientColors[i];
+                UnityEngine.RenderSettings.skybox = skyboxes[i];
             }
             else{
                 planes[i].SetActive(false);
@@ -139,9 +171,15 @@ public class GameControler : MonoBehaviour
             character.GetComponent<CharacterMovement>().ToggleLockMovement();
             mainCamera.GetComponent<CameraRotation>().ToggleLook();
         } 
-        if(Input.GetKeyDown(planeshiftKey) && allowedControls){
+        if(Input.GetKeyDown(planeshiftKey) && allowedControls && offCooldown){
+            SoundManager.Instance.playEffSound(audioClips[0]);
             var tempColour = planeshiftEffect.GetComponent<Image>().color;
             tempColour.a = 1f;;
+
+            offCooldown = false;
+            cooldownTimer = cooldownTime;
+            cooldownDot.SetActive(true);
+
             planeshiftEffect.GetComponent<Image>().color = tempColour;
             if(planes.Length == planeIndex + 1 ) {
                 planeIndex = 0;
