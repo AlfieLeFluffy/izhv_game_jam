@@ -19414,7 +19414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conversationStartNode: PavelDead
   interactDistance: 2.5
-  body: {fileID: 810235796}
+  body: {fileID: 0}
 --- !u!1001 &2060509641
 PrefabInstance:
   m_ObjectHideFlags: 0
