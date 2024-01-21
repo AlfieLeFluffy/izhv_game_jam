@@ -1,10 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Yarn;
 
 public class ConnectionController : MonoBehaviour
 {
@@ -15,6 +20,7 @@ public class ConnectionController : MonoBehaviour
     public Transform lines;
     public Transform postedNotes;
     public Transform unusedNotes;
+    public GameObject notePreview;
 
     public GameObject cam;
     public RectTransform canvas;
@@ -22,8 +28,11 @@ public class ConnectionController : MonoBehaviour
 
     private GameObject newObject;
     public bool connect;
+
+    private string[] testNoteTexts = new string[] { "Test Text", "beep boop", "uwu", "Pedro Pascal", "idk anymore", "pain and suffering" };
+    private Color[] testNoteColors = new Color[] { Color.green, Color.blue, Color.red, Color.magenta, Color.yellow, Color.cyan };
     
-    
+
     void Start()
     {
         connect = false;
@@ -55,19 +64,25 @@ public class ConnectionController : MonoBehaviour
         newObject.GetComponent<RectTransform>().localPosition = new Vector3(unusedNotes.childCount * 60 - 10, 0, 0);
         newObject.GetComponent<UnusedNoteScript>().controller = this.GetComponent<ConnectionController>();
         newObject.GetComponent<UnusedNoteScript>().index = unusedNotes.childCount;
+
+        newObject.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = testNoteColors[(unusedNotes.childCount - 1) % 6];
+        newObject.GetComponentInChildren<TextMeshProUGUI>().text = testNoteTexts[(unusedNotes.childCount - 1) % 6];
     }
 
     public void PostNote(GameObject note)
     {
         newObject = Instantiate(postedNotePrefab, postedNotes);
         newObject.GetComponent<Transform>().position = sideToBoard(note.transform.position);
+        //newObject.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = note.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color;
+        newObject.GetComponentInChildren<TextMeshPro>().text = note.GetComponentInChildren<TextMeshProUGUI>().text;
 
-        RectTransform[] noteArr = unusedNotes.GetComponentsInChildren<RectTransform>();
+        RectTransform child;
 
-        for (int i = note.GetComponent<UnusedNoteScript>().index + 1; i < noteArr.Length; i++)
+        for (int i = note.GetComponent<UnusedNoteScript>().index; i < unusedNotes.childCount; i++)
         {
-            noteArr[i].localPosition -= new Vector3(60, 0, 0);
-            noteArr[i].GetComponent<UnusedNoteScript>().index--;
+            child = unusedNotes.GetChild(i).GetComponent<RectTransform>();
+            child.localPosition -= new Vector3(60, 0, 0);
+            child.GetComponent<UnusedNoteScript>().index--;
         }
 
         Destroy(note);
@@ -75,10 +90,9 @@ public class ConnectionController : MonoBehaviour
 
     public void PutAside(GameObject note)
     {
-        newObject = Instantiate(unusedNotePrefab, unusedNotes);
-        newObject.GetComponent<RectTransform>().localPosition = new Vector3(unusedNotes.childCount * 60 - 10, 0, 0);
-        newObject.GetComponent<UnusedNoteScript>().controller = this.GetComponent<ConnectionController>();
-        newObject.GetComponent<UnusedNoteScript>().index = unusedNotes.childCount;
+        AddNewNote();
+        //newObject.transform.GetChild(0).GetComponent<Material>().color = note.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color;
+        newObject.GetComponentInChildren<TextMeshProUGUI>().text = note.GetComponentInChildren<TextMeshPro>().text;
 
         LineController line;
 
@@ -92,6 +106,18 @@ public class ConnectionController : MonoBehaviour
         }
 
         Destroy(note);
+    }
+
+    public void OpenPreview(string text, Color color)
+    {
+        notePreview.SetActive(!notePreview.activeSelf);
+        notePreview.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        notePreview.transform.GetChild(0).GetChild(0).GetComponent<UnityEngine.UI.Image>().color = color;
+    }
+
+    public void ClosePreview()
+    {
+        notePreview.SetActive(false);
     }
 
     public void SwitchConnectVar()

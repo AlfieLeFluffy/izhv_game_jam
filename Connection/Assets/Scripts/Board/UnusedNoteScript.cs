@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class UnusedNoteScript : MonoBehaviour
+public class UnusedNoteScript : MonoBehaviour, IPointerClickHandler
 {
     public ConnectionController controller;
     public int index;
@@ -11,7 +13,16 @@ public class UnusedNoteScript : MonoBehaviour
     private Vector3 moveStart;
 
 
-    public void GrabNote()
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            controller.OpenPreview(this.GetComponentInChildren<TextMeshProUGUI>().text, this.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color);
+        }
+    }
+
+
+    public void BeginDragNote()
     {
         moveStart = Input.mousePosition;
     }
@@ -22,7 +33,7 @@ public class UnusedNoteScript : MonoBehaviour
         moveStart = Input.mousePosition;
     }
 
-    public void DropNote()
+    public void EndDragNote()
     {
         if (Input.mousePosition.y > 70)
         {
