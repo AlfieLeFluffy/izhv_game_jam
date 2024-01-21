@@ -76,18 +76,24 @@ public class GameControler : MonoBehaviour
 
     private void FixedUpdate(){
         ShiftPlanes();
+        ShiftPlaneCooldownAnimation();
         ShiftCrosshair();
 
         if(planeshiftEffect.GetComponent<Image>().color.a>0){
             planeshiftEffect.SetActive(true);
             var tempColour = planeshiftEffect.GetComponent<Image>().color;
-            tempColour.a = tempColour.a - 0.1f;
+            tempColour.a = tempColour.a - 0.05f;
             planeshiftEffect.GetComponent<Image>().color = tempColour;
         }
         else{
             planeshiftEffect.SetActive(false);
         }
 
+        
+
+    }
+
+    private void ShiftPlaneCooldownAnimation(){
         if(cooldownTimer>0){
             cooldownTimer -= Time.deltaTime;
             Vector3 angles = cooldownDot.GetComponent<RectTransform>().eulerAngles; 
@@ -98,7 +104,6 @@ public class GameControler : MonoBehaviour
             offCooldown = true;
             cooldownDot.SetActive(false);
         }
-
     }
 
     private void ShiftPlanes(){
