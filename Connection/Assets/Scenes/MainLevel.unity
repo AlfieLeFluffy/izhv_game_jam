@@ -1733,6 +1733,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BoardPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4072705501240703220, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
+      propertyPath: noteTable
+      value: 
+      objectReference: {fileID: 344647670}
     - target: {fileID: 4194122901077923249, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
       propertyPath: m_LocalPosition.x
       value: 274
@@ -1774,9 +1778,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5522593268890432315, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9074443635745871282, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 344647670}
   m_SourcePrefab: {fileID: 100100000, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
 --- !u!1 &344647665 stripped
 GameObject:
@@ -1798,6 +1806,35 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2756984304920069057, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
   m_PrefabInstance: {fileID: 344647664}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &344647669 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9074443635745871282, guid: 566898030612ca4488eeb912d8a8e388, type: 3}
+  m_PrefabInstance: {fileID: 344647664}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &344647670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344647669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f928b18fa89f981468bcd62206fe20ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titles:
+  - Victim's Body
+  - Murder Weapon
+  - Victim's Ex
+  colors:
+  - {r: 0.9339623, g: 0.3216002, b: 0.3216002, a: 0}
+  - {r: 0.60942507, g: 0.70680696, b: 0.7830189, a: 0}
+  - {r: 0.9056604, g: 0.8981329, b: 0.28622285, a: 0}
+  materials:
+  - {fileID: 2100000, guid: e4426e1fa80d5ea429cc1330d8d6cac6, type: 2}
+  - {fileID: 2100000, guid: bd5bf512d393de9439d48ad7eca5c342, type: 2}
+  - {fileID: 2100000, guid: 423682a5432265f40aec74d1a87faf78, type: 2}
 --- !u!1 &382899282
 GameObject:
   m_ObjectHideFlags: 0

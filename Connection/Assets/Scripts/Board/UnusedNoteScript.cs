@@ -9,6 +9,7 @@ public class UnusedNoteScript : MonoBehaviour, IPointerClickHandler
 {
     public ConnectionController controller;
     public int index;
+    public int noteNumber;
 
     private Vector3 moveStart;
 

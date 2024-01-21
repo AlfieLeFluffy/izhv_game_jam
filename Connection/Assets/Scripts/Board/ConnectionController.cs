@@ -6,6 +6,7 @@ public class ConnectionController : MonoBehaviour
     public GameObject linePrefab;
     public GameObject postedNotePrefab;
     public GameObject unusedNotePrefab;
+    public NoteTable noteTable;
 
     public Transform lines;
     public Transform postedNotes;
@@ -18,9 +19,6 @@ public class ConnectionController : MonoBehaviour
 
     private GameObject newObject;
     public bool connecting;
-
-    private string[] testNoteTexts = new string[] { "Test Text", "beep boop", "uwu", "Pedro Pascal", "idk anymore", "pain and suffering" };
-    private Color[] testNoteColors = new Color[] { Color.green, Color.blue, Color.red, Color.magenta, Color.yellow, Color.cyan };
     
 
     void Start()
@@ -53,41 +51,21 @@ public class ConnectionController : MonoBehaviour
         line.pointB = end;
     }
 
-    public void AddNewNote()
+    public void AddNoteToSide(int noteNumber)
     {
         newObject = Instantiate(unusedNotePrefab, unusedNotes);
         newObject.GetComponent<RectTransform>().localPosition = new Vector3(unusedNotes.childCount * 60 - 10, 0, 0);
         newObject.GetComponent<UnusedNoteScript>().controller = this.GetComponent<ConnectionController>();
         newObject.GetComponent<UnusedNoteScript>().index = unusedNotes.childCount;
+        newObject.GetComponent<UnusedNoteScript>().noteNumber = noteNumber;
 
-        newObject.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = testNoteColors[(unusedNotes.childCount - 1) % 6];
-        newObject.GetComponentInChildren<TextMeshProUGUI>().text = testNoteTexts[(unusedNotes.childCount - 1) % 6];
-    }
-
-    public void PostNote(GameObject note)
-    {
-        newObject = Instantiate(postedNotePrefab, postedNotes);
-        newObject.GetComponent<Transform>().position = sideToBoard(note.transform.position);
-        //newObject.transform.GetChild(0).GetComponent<Material>().color = note.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color;
-        newObject.GetComponentInChildren<TextMeshPro>().text = note.GetComponentInChildren<TextMeshProUGUI>().text;
-
-        RectTransform child;
-
-        for (int i = note.GetComponent<UnusedNoteScript>().index; i < unusedNotes.childCount; i++)
-        {
-            child = unusedNotes.GetChild(i).GetComponent<RectTransform>();
-            child.localPosition -= new Vector3(60, 0, 0);
-            child.GetComponent<UnusedNoteScript>().index--;
-        }
-
-        Destroy(note);
+        newObject.GetComponentInChildren<TextMeshProUGUI>().text = noteTable.titles[noteNumber];
+        newObject.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color = noteTable.colors[noteNumber];
     }
 
     public void PutAside(GameObject note)
     {
-        AddNewNote();
-        //newObject.transform.GetChild(0).GetComponent<Material>().color = note.transform.GetChild(0).GetComponent<UnityEngine.UI.Image>().color;
-        newObject.GetComponentInChildren<TextMeshProUGUI>().text = note.GetComponentInChildren<TextMeshPro>().text;
+        AddNoteToSide(note.GetComponent<UnusedNoteScript>().noteNumber);
 
         LineController line;
 
@@ -101,6 +79,27 @@ public class ConnectionController : MonoBehaviour
         }
 
         cursor.ClearCol();
+        Destroy(note);
+    }
+
+    public void PostNote(GameObject note)
+    {
+        newObject = Instantiate(postedNotePrefab, postedNotes);
+        newObject.GetComponent<Transform>().position = sideToBoard(note.transform.position);
+        newObject.GetComponentInChildren<TextMeshPro>().text = noteTable.titles[note.GetComponent<UnusedNoteScript>().noteNumber];
+        newObject.transform.GetChild(0).GetComponent<MeshRenderer>().material = noteTable.materials[note.GetComponent<UnusedNoteScript>().noteNumber];
+
+        newObject.GetComponent<PostedNoteScript>().noteNumber = note.GetComponent<UnusedNoteScript>().noteNumber;
+
+        RectTransform child;
+
+        for (int i = note.GetComponent<UnusedNoteScript>().index; i < unusedNotes.childCount; i++)
+        {
+            child = unusedNotes.GetChild(i).GetComponent<RectTransform>();
+            child.localPosition -= new Vector3(60, 0, 0);
+            child.GetComponent<UnusedNoteScript>().index--;
+        }
+
         Destroy(note);
     }
 
