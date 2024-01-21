@@ -29,5 +29,8 @@ public class LineController : MonoBehaviour
 
         v = pointB.position - pointA.position;
         this.transform.rotation = Quaternion.Euler(0, 0, Vector3.Angle(v, (v.x < 0) ? Vector3.up : Vector3.down));
+
+        this.transform.GetChild(0).transform.localScale = 
+            new Vector3(Vector3.Distance(pointA.position, pointB.position) / 100 - 0.4f, this.transform.GetChild(0).transform.localScale.y, this.transform.GetChild(0).transform.localScale.z); 
     }
 }
