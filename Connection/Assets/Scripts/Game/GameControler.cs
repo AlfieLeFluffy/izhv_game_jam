@@ -28,6 +28,9 @@ public class GameControler : MonoBehaviour
 
     public GameObject[] planes;
     public TMP_Text[] linesUI;
+    public Material[] skyboxes;
+    
+    public Color[] UIcolours;
     public string[] displayTimes;
     public float[] angles;
     public float[] intensities;
@@ -103,10 +106,17 @@ public class GameControler : MonoBehaviour
             if(i == planeIndex){
                 planes[i].SetActive(true);
                 overworldLight.transform.eulerAngles = new Vector3(angles[i], overworldLight.transform.eulerAngles.y, overworldLight.transform.eulerAngles.z);
+
                 linesUI[0].text = "//DIMENSION: "+planes[i].name;
-                linesUI[1].text = "///TIME: "+displayTimes[i];
+                linesUI[0].color = UIcolours[i];
+                linesUI[1].text = "//TIME: "+displayTimes[i];
+                linesUI[1].color = UIcolours[i];
+                crosshairStates[crosshairIndex].GetComponent<Image>().color = UIcolours[i];
+                cooldownDot.GetComponent<Image>().color = UIcolours[i];
+
                 overworldLight.GetComponent<Light>().intensity = intensities[i];
                 overworldLight.GetComponent<Light>().color = ambientColors[i];
+                UnityEngine.RenderSettings.skybox = skyboxes[i];
             }
             else{
                 planes[i].SetActive(false);
