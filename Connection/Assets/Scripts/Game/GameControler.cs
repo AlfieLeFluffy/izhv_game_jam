@@ -15,6 +15,7 @@ public class GameControler : MonoBehaviour
 
     public KeyCode menuKey = KeyCode.Escape;
     public KeyCode planeshiftKey = KeyCode.Q;
+    public KeyCode boardKey = KeyCode.Tab;
 
     public bool allowedControls = true;
 
@@ -54,6 +55,15 @@ public class GameControler : MonoBehaviour
     public int crosshairIndex;
     public float detectDistance;
 
+    [Header("Board")]
+
+    public GameObject boardPrefab;
+    public Camera boardCamera;
+    public GameObject boardUI;
+    private bool isOpen;
+    
+
+
     [Header("Audio")]
     
     public AudioClip[] audioClips;
@@ -67,6 +77,10 @@ public class GameControler : MonoBehaviour
         locked = true;
         gameMenu.SetActive(false);    
         gameUI.SetActive(false);
+        isOpen = false;
+        boardUI.SetActive(false);
+        mainCamera.gameObject.SetActive(true);
+        boardCamera.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -177,6 +191,30 @@ public class GameControler : MonoBehaviour
             character.GetComponent<CharacterMovement>().ToggleLockMovement();
             mainCamera.GetComponent<CameraRotation>().ToggleLook();
         } 
+
+        if(Input.GetKeyDown(boardKey) && allowedControls){
+            if(!isOpen){
+                TogglePlaneshifting();
+                ToggleLocked();
+                isOpen =true;
+                boardUI.SetActive(true);
+                mainCamera.gameObject.SetActive(false);
+                boardCamera.gameObject.SetActive(true);
+                character.GetComponent<CharacterMovement>().ToggleLockMovement();
+                mainCamera.GetComponent<CameraRotation>().ToggleLook();
+            }
+            else{
+                TogglePlaneshifting();
+                ToggleLocked();
+                isOpen =false;
+                boardUI.SetActive(false);
+                mainCamera.gameObject.SetActive(true);
+                boardCamera.gameObject.SetActive(false);
+                character.GetComponent<CharacterMovement>().ToggleLockMovement();
+                mainCamera.GetComponent<CameraRotation>().ToggleLook();
+            }
+        } 
+
         if(Input.GetKeyDown(planeshiftKey) && allowedControls && offCooldown && plashiftingAllowed){
             SoundManager.Instance.playEffSound(audioClips[0]);
             var tempColour = planeshiftEffect.GetComponent<Image>().color;
