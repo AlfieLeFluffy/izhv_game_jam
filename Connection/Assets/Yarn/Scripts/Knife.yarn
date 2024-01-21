@@ -1,0 +1,8 @@
+﻿title: KnifeFound
+tags:
+---
+Knife: *knife coverd in blood lays on the floor*
+->Gotta be the murder weapon.
+    <<AddNoteToSide ConnectionController 2>>
+    <<set $WasBehindDoor = true>>
+===

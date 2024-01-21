@@ -1,0 +1,41 @@
+﻿title: PavelDead
+tags:
+---
+<<declare $seenBody = false>>
+Pavel's corpse: *a dead body laying on the floor*
+<<AddNoteToSide ConnectionController 1>>
+Pavel's corpse: *seems like he was stabbed by sharp pointed weapon*
+<<set $seenBody = true>>
+===
+
+title: PavelAlive
+tags:
+---
+<<declare $talkedToPavel = false>>
+<<if $talkedToPavel == true>>
+    <<jump PavelEnd>>
+<<endif>>
+Pavel: Oh, who are you and what are you doing in my house?
+-> I am here because...
+    Pavel: Just leave, please.
+-> I am an interdimensional detective and congratulation, you have been murdered in another dimension.
+    Pavel: Realy? Hard to believe, but you appeared here so probably there is a grain of truth to this.
+        -> Weird to talk to the victim.
+            Pavel: Yeah, it's gotta be.
+            -> Who do you think killed you?
+                Pavel: Probably my physo girlfriend. I am sleeping with her friend.
+                Pavel: But please don't tell my version.
+        -> Who do you think killed you?
+            Pavel: Probably my physo girlfriend. I am sleeping with her friend.
+            Pavel: But please don't tell my version.
+-> Well, thanks for the info and have a nice rest of the day.
+Pavel: You too.
+<<set $talkedToPavel = true>>
+===
+
+title: PavelEnd
+tags:
+---
+Pavel: Oh, you are still here?
+-> Yeah, gotta go.
+===
