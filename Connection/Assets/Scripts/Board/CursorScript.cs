@@ -107,11 +107,7 @@ public class CursorScript : MonoBehaviour
             {
                 if (Input.GetMouseButtonUp(0))
                 {
-                    if (col.TryGetComponent<LineRenderer>(out l))
-                    {
-                        ChangeConnectionText(col.transform);
-                    }
-                    else
+                    if (!col.TryGetComponent<LineRenderer>(out l))
                     {
                         PostedNoteDrop(col.transform);
                     }
@@ -124,6 +120,7 @@ public class CursorScript : MonoBehaviour
                         if (controller.connecting)
                         {
                             Destroy(col.transform.gameObject);
+                            col = this.gameObject;
                         }
                         else
                         {
@@ -164,12 +161,6 @@ public class CursorScript : MonoBehaviour
     {
         col = this.gameObject;
         dragLock = false;
-    }
-
-
-    private void ChangeConnectionText(Transform line)
-    {
-        print("yay");
     }
 
     public void PostedNoteDrop(Transform note)
