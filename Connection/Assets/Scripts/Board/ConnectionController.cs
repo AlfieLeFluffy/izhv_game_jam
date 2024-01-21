@@ -1,14 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-using Yarn;
 
 public class ConnectionController : MonoBehaviour
 {
@@ -26,7 +17,7 @@ public class ConnectionController : MonoBehaviour
     public CursorScript cursor;
 
     private GameObject newObject;
-    public bool connect;
+    public bool connecting;
 
     private string[] testNoteTexts = new string[] { "Test Text", "beep boop", "uwu", "Pedro Pascal", "idk anymore", "pain and suffering" };
     private Color[] testNoteColors = new Color[] { Color.green, Color.blue, Color.red, Color.magenta, Color.yellow, Color.cyan };
@@ -34,7 +25,7 @@ public class ConnectionController : MonoBehaviour
 
     void Start()
     {
-        connect = false;
+        connecting = false;
     }
 
 
@@ -127,6 +118,6 @@ public class ConnectionController : MonoBehaviour
 
     public void SwitchConnectVar()
     {
-        connect = !connect;
+        connecting = !connecting;
     }
 }

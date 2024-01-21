@@ -14,8 +14,13 @@ public class CursorScript : MonoBehaviour
     private GameObject col;
     private Vector3 start;
     private LineRenderer l;
+    private GameObject g;
 
     public bool dragLock;
+
+    private string oldText;
+    private bool typing;
+    private TextMeshPro connectionText;
 
 
     private void Start()
@@ -36,54 +41,103 @@ public class CursorScript : MonoBehaviour
             cam.orthographicSize -= Input.mouseScrollDelta.y * 3;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (typing)
         {
-            start = this.transform.position;
-
-            if (!col.Equals(this.gameObject))
+            if (Input.GetKeyUp(KeyCode.Return)
+                || Input.GetKeyUp(KeyCode.KeypadEnter))
             {
-                dragLock = true;
+                g.SetActive(false);
+                typing = false;
+            }
+            else if (Input.GetKeyUp(KeyCode.Escape)
+                || Input.GetMouseButtonUp(0)
+                || Input.GetMouseButtonUp(1))
+            {
+                connectionText.text = oldText;
+                g.SetActive(false);
+                typing = false;
+            }
+            else if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                connectionText.text = connectionText.text.Remove(connectionText.text.Length - 1, 1);
+            }
+            else if (Input.anyKeyDown)
+            {
+                connectionText.text += Input.inputString;
             }
         }
-
-        if (Input.GetMouseButton(0))
+        else
         {
-            if (!dragLock)
+            if (Input.GetMouseButtonDown(0))
             {
-                cam.gameObject.transform.position -= (this.transform.position - start) / 1.5f;
-            }
-            else if (!col.TryGetComponent<LineRenderer>(out l))
-            {
-                col.transform.position += this.transform.position - start;
+                start = this.transform.position;
+
+                if (!col.Equals(this.gameObject))
+                {
+                    dragLock = true;
+                }
             }
 
-            start = this.transform.position;
-        }
-
-        if (!col.Equals(this.gameObject))
-        {
-            if (Input.GetMouseButtonUp(0))
+            if (Input.GetMouseButton(0))
             {
-                if (col.TryGetComponent<LineRenderer>(out l))
+                if (!dragLock)
                 {
-                    ChangeConnectionText(col.transform);
+                    cam.gameObject.transform.position -= (this.transform.position - start) / 1.5f;
                 }
-                else
+                else if (!col.TryGetComponent<LineRenderer>(out l))
                 {
-                    PostedNoteDrop(col.transform);
+                    col.transform.position += this.transform.position - start;
+                }
+
+                start = this.transform.position;
+            }
+
+            if (col.Equals(this.gameObject))
+            {
+                if (Input.GetMouseButtonUp(1)
+                    && lines.childCount != 0)
+                {
+                    if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointB == this.transform)
+                    {
+                        Destroy(lines.GetChild(lines.childCount - 1).gameObject);
+                    }
                 }
             }
-            
-            if (Input.GetMouseButtonUp(1))
+            else
             {
-                if (col.TryGetComponent<LineRenderer>(out l)
-                    && controller.connect)
+                if (Input.GetMouseButtonUp(0))
                 {
-                    Destroy(col.transform.gameObject);
+                    if (col.TryGetComponent<LineRenderer>(out l))
+                    {
+                        ChangeConnectionText(col.transform);
+                    }
+                    else
+                    {
+                        PostedNoteDrop(col.transform);
+                    }
                 }
-                else
+
+                if (Input.GetMouseButtonUp(1))
                 {
-                    PostedNoteInteraction(col.transform);
+                    if (col.TryGetComponent<LineRenderer>(out l))
+                    {
+                        if (controller.connecting)
+                        {
+                            Destroy(col.transform.gameObject);
+                        }
+                        else
+                        {
+                            typing = true;
+                            g = col.transform.GetChild(0).gameObject;
+                            g.SetActive(true);
+                            connectionText = col.transform.GetChild(1).GetComponent<TextMeshPro>();
+                            oldText = connectionText.text;
+                        }
+                    }
+                    else
+                    {
+                        PostedNoteInteraction(col.transform);
+                    }
                 }
             }
         }
@@ -104,6 +158,7 @@ public class CursorScript : MonoBehaviour
             ClearCol();
         }
     }
+
 
     public void ClearCol()
     {
@@ -129,19 +184,37 @@ public class CursorScript : MonoBehaviour
 
     public void PostedNoteInteraction(Transform note)
     {
-        if (controller.connect)
+        if (controller.connecting)
         {
             if (lines.childCount != 0)
             {
-                if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointB == this.transform)
+                LineController lastLine = lines.GetChild(lines.childCount - 1).GetComponent<LineController>();
+
+                if (lastLine.pointB == this.transform)
                 {
-                    if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointA == note)
+                    if (lastLine.pointA == note)
                     {
                         Destroy(lines.GetChild(lines.childCount - 1).gameObject);
                         return;
                     }
-                    
-                    lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointB = note;
+
+                    LineController line;
+
+                    for (int i = 0; i < lines.childCount - 1; i++)
+                    {
+                        line = lines.GetChild(i).GetComponent<LineController>();
+
+                        if ((line.pointA == lastLine.pointA
+                            && line.pointB == note)
+                            || (line.pointA == note
+                            && line.pointB == lastLine.pointA))
+                        {
+                            Destroy(lines.GetChild(lines.childCount - 1).gameObject);
+                            return;
+                        }
+                    }
+
+                    lastLine.pointB = note;
                     return;
                 }
             }
