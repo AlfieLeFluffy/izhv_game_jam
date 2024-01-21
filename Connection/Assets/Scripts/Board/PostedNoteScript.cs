@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class PostedNoteScript : MonoBehaviour
 {
-    
+    public int noteNumber;
 }
