@@ -12,6 +12,7 @@ public class CursorScript : MonoBehaviour
 
     private GameObject col;
     private Vector3 start;
+    private LineRenderer l;
 
 
     private void Start()
@@ -27,18 +28,34 @@ public class CursorScript : MonoBehaviour
             {
                 start = this.transform.position;
             }
+
             if (Input.GetMouseButton(0))
             {
                 PostedNoteMove(col.transform);
             }
+
             if (Input.GetMouseButtonUp(0))
             {
-                PostedNoteDrop(col.transform);
+                if (col.TryGetComponent<LineRenderer>(out l))
+                {
+                    ChangeConnectionText(col.transform);
+                }
+                else
+                {
+                    PostedNoteDrop(col.transform);
+                }
             }
 
-            else if (Input.GetMouseButtonUp(1))
+            if (Input.GetMouseButtonUp(1))
             {
-                PostedNoteInteraction(col.transform);
+                if (col.TryGetComponent<LineRenderer>(out l))
+                {
+                    DeleteConnection(col.transform);
+                }
+                else
+                {
+                    PostedNoteInteraction(col.transform);
+                }
             }
         }
 
@@ -58,6 +75,19 @@ public class CursorScript : MonoBehaviour
         }
     }
 
+
+    private void ChangeConnectionText(Transform line)
+    {
+        print("yay");
+    }
+
+    private void DeleteConnection(Transform line)
+    {
+        if (controller.connect)
+        { 
+            Destroy(line.gameObject);
+        }
+    }
 
     public void PostedNoteMove(Transform note)
     {
@@ -81,13 +111,14 @@ public class CursorScript : MonoBehaviour
         {
             if (lines.childCount != 0)
             {
-                if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointA == note)
+                if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointB == this.transform)
                 {
-                    Destroy(lines.GetChild(lines.childCount - 1).gameObject);
-                    return;
-                }
-                else if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointB == this.transform)
-                {
+                    if (lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointA == note)
+                    {
+                        Destroy(lines.GetChild(lines.childCount - 1).gameObject);
+                        return;
+                    }
+                    
                     lines.GetChild(lines.childCount - 1).GetComponent<LineController>().pointB = note;
                     return;
                 }
