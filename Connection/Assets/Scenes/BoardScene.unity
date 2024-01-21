@@ -555,7 +555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linePrefab: {fileID: 5835607990601102342, guid: fcc0175e44c55be4992855fc1f18f717, type: 3}
   postedNotePrefab: {fileID: 8005920663276685508, guid: ddab09167e2f636449f543c2b9e995d9, type: 3}
-  unusedNotePrefab: {fileID: 1181785025646990198, guid: 6d90206ed21cb3b4e93010303da8e8fc, type: 3}
+  unusedNotePrefab: {fileID: 761642588750515379, guid: 61caa0c10ce7c6e4eaa9ee964bc45619, type: 3}
   lines: {fileID: 676596758}
   postedNotes: {fileID: 509380404}
   unusedNotes: {fileID: 1143746308}
@@ -953,7 +953,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1160342844}
           m_TargetAssemblyTypeName: ConnectionController, Assembly-CSharp
-          m_MethodName: SwitchPreviewActive
+          m_MethodName: ClosePreview
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

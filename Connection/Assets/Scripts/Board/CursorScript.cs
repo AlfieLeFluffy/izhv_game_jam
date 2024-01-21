@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CursorScript : MonoBehaviour
@@ -96,7 +97,7 @@ public class CursorScript : MonoBehaviour
         }
         else
         {
-            controller.SwitchPreviewActive();
+            controller.OpenPreview(note.GetComponentInChildren<TextMeshPro>().text, Color.gray);
         }
     }
 }
