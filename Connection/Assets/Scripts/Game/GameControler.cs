@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Yarn.Unity;
 
 public class GameControler : MonoBehaviour
 {
@@ -38,6 +39,8 @@ public class GameControler : MonoBehaviour
     public int planeIndex;
 
     [Header("Planes Shifting")]
+
+    public bool plashiftingAllowed = false;
     public GameObject planeshiftEffect;
     public GameObject cooldownDot;
     public float cooldownTime = 2f;
@@ -63,7 +66,7 @@ public class GameControler : MonoBehaviour
     {
         locked = true;
         gameMenu.SetActive(false);    
-        gameUI.SetActive(true);
+        gameUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -88,8 +91,6 @@ public class GameControler : MonoBehaviour
         else{
             planeshiftEffect.SetActive(false);
         }
-
-        
 
     }
 
@@ -176,7 +177,7 @@ public class GameControler : MonoBehaviour
             character.GetComponent<CharacterMovement>().ToggleLockMovement();
             mainCamera.GetComponent<CameraRotation>().ToggleLook();
         } 
-        if(Input.GetKeyDown(planeshiftKey) && allowedControls && offCooldown){
+        if(Input.GetKeyDown(planeshiftKey) && allowedControls && offCooldown && plashiftingAllowed){
             SoundManager.Instance.playEffSound(audioClips[0]);
             var tempColour = planeshiftEffect.GetComponent<Image>().color;
             tempColour.a = 1f;;
@@ -201,5 +202,34 @@ public class GameControler : MonoBehaviour
     
     public void ToggleAllowedControls(){
         allowedControls = !allowedControls;
+    }
+
+    [YarnCommand("TogglePlaneshifting")]
+    public void TogglePlaneshifting(){
+        plashiftingAllowed = !plashiftingAllowed;
+        gameUI.SetActive(plashiftingAllowed);
+    }
+
+    [YarnCommand("SetPlaneIndex")]
+    public void SetPlaneIndex(int index){
+        planeIndex = index;
+        Debug.Log(planeIndex);
+        SoundManager.Instance.playEffSound(audioClips[0]);
+        var tempColour = planeshiftEffect.GetComponent<Image>().color;
+        tempColour.a = 1f;;
+
+        offCooldown = false;
+        cooldownTimer = cooldownTime;
+        cooldownDot.SetActive(true);
+
+        planeshiftEffect.GetComponent<Image>().color = tempColour;
+        if(planes.Length == planeIndex + 1 ) {
+            planeIndex = 0;
+        }
+        else{
+            planeIndex++;
+        }
+        
+        ShiftPlanes();
     }
 }

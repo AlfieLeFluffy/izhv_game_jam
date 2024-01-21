@@ -1,5 +1,38 @@
-﻿title: CentralCommand
+﻿title: CentralCommandStart
 tags:
 ---
+Phone: *ringing*
+-> *pick up phone*
+Central Command: Hello detective, we see you have arrived at the scene of the crime.
+Central Command: This is the perfect time to test out the new device we gave you.
+Central Command: It is an early prototype for a dimension shifting device.
+-> So you want me to hop to another dimension to solve this?
+    <<jump CentralCommandExactly>>
+-> Isn't that dangerous?
+    Central Command: To a certain extend, but from our testing it is 75% safe.
+    <<jump CentralCommandPoweringON>>
+===
 
+
+title: CentralCommandExactly
+tags:
+---
+Central Command: Exactly.
+<<jump CentralCommandPoweringON>>
+===
+
+title: CentralCommandPoweringON
+tags:
+---
+Central Command: We have locate a dimension close to our own.
+Central Command: Powering on the device.
+<<TogglePlaneshifting GameController>>
+Central Command: Ok, seems like everything is alright.
+Central Command: We need to test the device so we are going to send to the target dimension.
+-> Wait, what?
+Central Command: Don't forget, to switch between the dimensions you need to hit the bit Q button.
+-> Which one?
+Central Command: The Q one... good luck.
+-> Wait...
+<<SetPlaneIndex GameController 0>>
 ===
