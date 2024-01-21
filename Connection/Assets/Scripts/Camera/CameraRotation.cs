@@ -16,14 +16,12 @@ public class CameraRotation : MonoBehaviour
     bool locked;
 
     public void Start(){
-        locked = true;
+        locked = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Update(){
-        
-        
-        if(locked){
+        if(!locked){
             float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime *sensX;
             float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime *sensY;
 
